@@ -2,7 +2,9 @@
 
 This is a tool to help validate your Apigility implementation against a RAML
 specification. This way you can make sure the implementation matches what the
-specification requirements. In comparison with similar tools this application
+specification requirements.
+
+In comparison with similar tools this application
 does not check the output of the api but the code structure directly.
 
 > Please note that this tool is in early stages of development.
@@ -10,6 +12,7 @@ does not check the output of the api but the code structure directly.
 ## Table of contents
 - [Installation](#installation)
 - [Usage](#usage)
+- [Validation](#validation)
 
 ## Installation
 ```php
@@ -31,3 +34,12 @@ Path to the Apigility project containing the source code
 
 ##### help (--spec)
 Display the usage message
+
+## Validation
+
+This is the list of fields from the RAML specification currently being validated
+
+| RAML          | Apigility                                        |
+| ------------- | ------------------------------------------------ |
+| title         | Check a module matching `title` exists           |
+| version       | Check a version folder matching `version` exists |
