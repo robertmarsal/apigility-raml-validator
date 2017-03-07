@@ -1,0 +1,22 @@
+{
+    "name": "robertboloc/apigility-raml-validator",
+    "description": "Validate an Apgility implementation against a RAML specification",
+    "type": "project",
+    "require": {
+        "php": "^7.0",
+        "alecsammon/php-raml-parser": "^2.2",
+        "league/climate": "^3.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robert Boloc",
+            "email": "robertboloc@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ApigilityRamlValidator\\": "src/"
+        }
+    }
+}

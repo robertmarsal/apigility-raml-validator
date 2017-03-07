@@ -1,0 +1,62 @@
+#!/usr/bin/env php
+<?php
+// Locate and use the autoloader
+$locations = [
+    __DIR__ . '/../../../autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+];
+$autoloaderFound = false;
+foreach ($locations as $autoloader) {
+    if (file_exists($autoloader)) {
+        require_once $autoloader;
+        $autoloaderFound = true;
+        break;
+    }
+}
+if (!$autoloaderFound) {
+    fwrite(STDERR, 'Cannot find autoloader. Please run `composer install`' . PHP_EOL);
+    exit(1);
+}
+
+use League\CLImate\CLImate;
+use ApigilityRamlValidator\Application;
+
+$climate = new CLImate();
+$climate->description('Validate an Apigility project against a RAML specification');
+$climate->arguments->add([
+    'spec'   => [
+        'prefix'      => 's',
+        'longPrefix'  => 'spec',
+        'description' => 'Path of the RAML specification',
+        'required'    => true,
+    ],
+    'project' => [
+        'prefix'      => 'p',
+        'longPrefix'  => 'project',
+        'description' => 'Path of the Apigility project',
+        'required'    => true,
+    ],
+    'help' => [
+        'longPrefix'  => 'help',
+        'description' => 'Prints usage statement',
+        'noValue'     => true,
+    ],
+]);
+try {
+    $climate->arguments->parse();
+} catch (Exception $exception) {
+    $climate->usage();
+    exit(1);
+}
+$spec    = $climate->arguments->get('spec');
+$project = $climate->arguments->get('project');
+if (!is_file($spec)) {
+    $climate->red('RAML specification does not exist!');
+    exit(1);
+}
+if (!is_dir($project)) {
+    $climate->red('Apigility project does not exist!');
+    exit(1);
+}
+$application = new Application($spec, $project);
+$application->run($climate);
