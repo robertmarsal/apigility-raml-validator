@@ -26,6 +26,7 @@ class Application
         // Run checks
         $this->checkAPIModuleExists($parsedSpec->getTitle());
         $this->checkCurrentVersionExists($parsedSpec->getTitle(), $parsedSpec->getVersion());
+        $this->checkEndpoints($parsedSpec->getTitle(), $parsedSpec->getResources());
 
         if (count($this->messages)) {
             $climate->red("Apigility implementation doesn't match the RAML specification!");
@@ -53,6 +54,29 @@ class Application
 
         if (!is_dir($versionPath)) {
             $this->messages[] = "No service with version $version found for the $title module";
+        }
+    }
+
+    public function checkEndpoints(string $title, array $resources)
+    {
+        $moduleConfig = include $this->project . '/module/' . $title . '/config/module.config.php';
+        $routes = $moduleConfig['router']['routes'];
+
+        foreach ($resources as $resource) {
+
+            $found = false;
+            // Check if the resource exists
+            foreach ($routes as $route) {
+                if (preg_match('/^' . preg_quote($resource->getUri(), '/') . '/', $route['options']['route'])) {
+                    $found = true;
+                }
+
+                //@TODO nested resources
+            }
+
+            if (!$found) {
+                $this->messages[] = 'Endpoint ' . $resource->getDisplayName() . ' not found';
+            }
         }
     }
 }
