@@ -43,6 +43,6 @@ This is the list of fields from the RAML specification currently being validated
 | ------------- | ------------------------------------------------ |
 | title         | Check a module matching `title` exists           |
 | version       | Check a version folder matching `version` exists |
-| resource\*    | Check a route has been defined for the resource  |
+| resource\*    | Check a route has been defined for the `resource`|
 
 \* only top level resources are detected for now
