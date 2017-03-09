@@ -69,6 +69,9 @@ class Application
             foreach ($routes as $route) {
                 if (preg_match('/^' . preg_quote($resource->getUri(), '/') . '/', $route['options']['route'])) {
                     $found = true;
+
+                    // Check all methods defined for the endpoint are implemented
+                    $this->checkEndpointsMethods($route, $moduleConfig, $resource, true);
                 }
 
                 //@TODO nested resources
@@ -77,6 +80,33 @@ class Application
             if (!$found) {
                 $this->messages[] = 'Endpoint ' . $resource->getDisplayName() . ' not found';
             }
+        }
+    }
+
+    public function checkEndpointsMethods(array $route, array $moduleConfig, $resource, $topResource = true)
+    {
+        // Extract controller from the route
+        $controller = $route['options']['defaults']['controller'];
+
+        // We assume the top resource is a collection method and
+        // sub resources will be entity.
+        $httpMethodsKey = $topResource
+            ? 'collection_http_methods'
+            : 'entity_http_methods';
+
+        // Check specification methods match the implementation
+        $definedMethods = array_values(
+            $moduleConfig['zf-rest'][$controller][$httpMethodsKey]
+        );
+
+        $specifiedMethods = array_keys($resource->getMethods());
+
+        $difference = array_diff($definedMethods, $specifiedMethods);
+
+        if ($difference) {
+            $this->messages[] = 'Missing methods for ' . $resource->getDisplayName(). ' resource!';
+            $this->messages[] = '  Expected ' . json_encode($specifiedMethods);
+            $this->messages[] = '  Implemented ' . json_encode($definedMethods);
         }
     }
 }

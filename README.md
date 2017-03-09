@@ -1,7 +1,7 @@
 # apigility-raml-validator
 
 This is a tool to help validate your Apigility implementation against a RAML
-specification. This way you can make sure the implementation matches what the
+specification. This way you can make sure the implementation matches the
 specification requirements.
 
 In comparison with similar tools this application
@@ -39,10 +39,11 @@ Display the usage message
 
 This is the list of fields from the RAML specification currently being validated
 
-| RAML          | Apigility                                        |
-| ------------- | ------------------------------------------------ |
-| title         | Check a module matching `title` exists           |
-| version       | Check a version folder matching `version` exists |
-| resource\*    | Check a route has been defined for the `resource`|
+| RAML          | Apigility                                                         |
+| ------------- | ----------------------------------------------------------------- |
+| title         | Check a module matching `title` exists                            |
+| version       | Check a version folder matching `version` exists                  |
+| resource \*   | Check a route has been defined for the `resource`                 |
+| method        | Check a collection route implements the methods of a top resource |
 
 \* only top level resources are detected for now
