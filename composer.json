@@ -18,5 +18,13 @@
         "psr-4": {
             "ApigilityRamlValidator\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ApigilityRamlValidatorTest\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
     }
 }
