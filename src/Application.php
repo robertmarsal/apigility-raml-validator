@@ -48,7 +48,7 @@ class Application
         }
     }
 
-    public function checkCurrentVersionExists(string $title, string $version)
+    public function checkCurrentVersionExists(string $title, $version)
     {
         $versionPath = $this->project . '/module/' . $title . '/src/' . ucfirst($version);
 
