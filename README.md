@@ -1,4 +1,6 @@
 # apigility-raml-validator
+[![Build Status](https://travis-ci.org/robertboloc/apigility-raml-validator.svg?branch=master)](https://travis-ci.org/robertboloc/apigility-raml-validator)
+[![License](https://poser.pugx.org/robertboloc/apigility-raml-validator/license.png)](https://packagist.org/packages/robertboloc/apigility-raml-validator)
 
 This is a tool to help validate your Apigility implementation against a RAML
 specification. This way you can make sure the implementation matches the
