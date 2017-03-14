@@ -101,9 +101,7 @@ class Application
 
         $specifiedMethods = array_keys($resource->getMethods());
 
-        $difference = array_diff($definedMethods, $specifiedMethods);
-
-        if ($difference) {
+        if (array_diff($definedMethods, $specifiedMethods)) {
             $this->messages[] = 'Missing methods for ' . $resource->getDisplayName(). ' resource!';
             $this->messages[] = '  Expected ' . json_encode($specifiedMethods);
             $this->messages[] = '  Implemented ' . json_encode($definedMethods);
