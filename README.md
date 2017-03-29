@@ -34,7 +34,10 @@ Path to the RAML specification file
 ##### target (-p | --project)
 Path to the Apigility project containing the source code
 
-##### help (--spec)
+##### module (-m | --module)
+Hint the name of the module in case it's different from the API name
+
+##### help (--help)
 Display the usage message
 
 ## Validation
