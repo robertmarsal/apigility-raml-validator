@@ -10,12 +10,15 @@ class Application
 {
     private $spec;
     private $project;
+    private $moduleHint;
+
     private $messages = [];
 
-    public function __construct(string $spec, string $project)
+    public function __construct(string $spec, string $project, $moduleHint = false)
     {
-        $this->spec    = $spec;
-        $this->project = $project;
+        $this->spec       = $spec;
+        $this->project    = $project;
+        $this->moduleHint = $moduleHint;
     }
 
     public function run(CLImate $climate)
@@ -24,9 +27,10 @@ class Application
         $parsedSpec = $ramlParser->parse($this->spec);
 
         // Run checks
-        $this->checkAPIModuleExists($parsedSpec->getTitle());
-        $this->checkCurrentVersionExists($parsedSpec->getTitle(), $parsedSpec->getVersion());
-        $this->checkEndpoints($parsedSpec->getTitle(), $parsedSpec->getResources());
+        $module = $this->moduleHint ? $this->moduleHint : $parsedSpec->getTitle();
+        $this->checkAPIModuleExists($module);
+        $this->checkCurrentVersionExists($module, $parsedSpec->getVersion());
+        $this->checkEndpoints($module, $parsedSpec->getResources());
 
         if (count($this->messages)) {
             $climate->red("Apigility implementation doesn't match the RAML specification!");
@@ -39,27 +43,27 @@ class Application
         }
     }
 
-    public function checkApiModuleExists(string $title)
+    public function checkApiModuleExists(string $module)
     {
-        $modulePath = $this->project . '/module/' . $title;
+        $modulePath = $this->project . '/module/' . $module;
 
         if (!is_dir($modulePath)) {
-            $this->messages[] = "The $title module does not exist";
+            $this->messages[] = "The $module module does not exist";
         }
     }
 
-    public function checkCurrentVersionExists(string $title, $version)
+    public function checkCurrentVersionExists(string $module, $version)
     {
-        $versionPath = $this->project . '/module/' . $title . '/src/' . ucfirst($version);
+        $versionPath = $this->project . '/module/' . $module . '/src/' . ucfirst($version);
 
         if (!is_dir($versionPath)) {
-            $this->messages[] = "No service with version $version found for the $title module";
+            $this->messages[] = "No service with version $version found for the $module module";
         }
     }
 
-    public function checkEndpoints(string $title, array $resources)
+    public function checkEndpoints(string $module, array $resources)
     {
-        $moduleConfig = include $this->project . '/module/' . $title . '/config/module.config.php';
+        $moduleConfig = include $this->project . '/module/' . $module . '/config/module.config.php';
         $routes = $moduleConfig['router']['routes'];
 
         foreach ($resources as $resource) {
