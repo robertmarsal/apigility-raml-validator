@@ -64,6 +64,15 @@ class Application
     public function checkEndpoints(string $module, array $resources)
     {
         $moduleConfig = include $this->project . '/module/' . $module . '/config/module.config.php';
+
+        // If documentation has been generated check if, if not skip and notify
+        $documentationConfigPath = $this->project . '/module/' . $module . '/config/documentation.config.php';
+        if (is_file($documentationConfigPath)) {
+            $documentationConfig = include $documentationConfigPath;
+        } else {
+            $this->messages[] = "Missing documentation for the module $module";
+        }
+
         $routes = $moduleConfig['router']['routes'];
 
         foreach ($resources as $resource) {
@@ -76,6 +85,10 @@ class Application
 
                     // Check all methods defined for the endpoint are implemented
                     $this->checkEndpointsMethods($route, $moduleConfig, $resource, true);
+                    // If available check documentation for the endpoint
+                    if (isset($documentationConfig)) {
+                        $this->checkDocumentation($route, $documentationConfig, $resource, true);
+                    }
                 }
 
                 //@TODO nested resources
@@ -109,6 +122,35 @@ class Application
             $this->messages[] = 'Missing methods for ' . $resource->getDisplayName(). ' resource!';
             $this->messages[] = '  Expected ' . json_encode($specifiedMethods);
             $this->messages[] = '  Implemented ' . json_encode($definedMethods);
+        }
+    }
+
+    public function checkDocumentation(array $route, array $documentationConfig, $resource, $topResource = true)
+    {
+        // Extract controller from the route
+        $controller = $route['options']['defaults']['controller'];
+
+        // We assume the top resource is a collection method and
+        // sub resources will be entity.
+        $methodsKey = $topResource ? 'collection' : 'entity';
+
+        foreach ($resource->getMethods() as $definedMethod) {
+            $methodType = $definedMethod->getType();
+
+            $resourceMethodIdentifier = $resource->getDisplayName() . ' ' . $methodType . ' (' . $methodsKey . ')';
+
+            if (isset($documentationConfig[$controller][$methodsKey][$methodType]['description'])) {
+                if (
+                    $documentationConfig[$controller][$methodsKey][$methodType]['description'] !==
+                    $definedMethod->getDescription()
+                ) {
+                    $this->messages[] = 'Documentation does not match for ' . $resourceMethodIdentifier;
+                    $this->messages[] = '  Expected: ' . $definedMethod->getDescription();
+                    $this->messages[] = '     Found: ' . $documentationConfig[$controller][$methodsKey][$methodType]['description'];
+                }
+            } else {
+                $this->messages[] = 'Missing documentation for ' . $resourceMethodIdentifier;
+            }
         }
     }
 }

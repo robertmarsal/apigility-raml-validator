@@ -69,9 +69,9 @@ validated against the implementation
 
 + /foo:
 +   get:
--     description: My test endpoint
++     description: My test endpoint
 
 + /bar:
 +   post:
--     description: Another test endpoint
++     description: Another test endpoint
 ```
