@@ -24,7 +24,12 @@ class Application
     public function run(CLImate $climate)
     {
         $ramlParser = new RamlParser();
-        $parsedSpec = $ramlParser->parse($this->spec);
+
+        if ($climate->arguments->get('debug')) {
+            $parsedSpec = $ramlParser->parse($this->spec);
+        } else {
+            $parsedSpec = @$ramlParser->parse($this->spec);
+        }
 
         // Run checks
         $module = $this->moduleHint ? $this->moduleHint : $parsedSpec->getTitle();

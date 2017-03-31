@@ -46,13 +46,20 @@ $climate->arguments->add([
         'description' => 'Prints usage statement',
         'noValue'     => true,
     ],
+    'debug' => [
+        'longPrefix'  => 'debug',
+        'description' => 'Enable debug messages when running the application',
+        'noValue'     => true,
+    ],
 ]);
+
 try {
     $climate->arguments->parse();
 } catch (Exception $exception) {
     $climate->usage();
     exit(1);
 }
+
 $spec       = $climate->arguments->get('spec');
 $project    = $climate->arguments->get('project');
 $moduleHint = $climate->arguments->get('module');
