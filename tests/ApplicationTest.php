@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 use ApigilityRamlValidator\Application;
 use League\CLImate\CLImate;
+use League\CLImate\Argument\Manager as ArgumentManager;
 use PHPUnit\Framework\TestCase;
 
 class ApplicationTest extends TestCase
@@ -30,6 +31,7 @@ class ApplicationTest extends TestCase
         ];
 
         $climateMock = $this->createMock(CLImate::class);
+        $climateMock->arguments = $this->createMock(ArgumentManager::class);
 
         $applicationMock =
             $this->getMockBuilder(Application::class)
