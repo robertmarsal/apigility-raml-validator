@@ -40,6 +40,9 @@ Hint the name of the module in case it's different from the API name
 ##### help (--help)
 Display the usage message
 
+##### debug (--debug)
+Enable debug messages when running the application
+
 ## Validation
 
 This is the list of fields from the RAML specification currently being validated
